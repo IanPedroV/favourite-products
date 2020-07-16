@@ -43,6 +43,11 @@ public class Client {
         else return id.equals(other.id);
     }
 
+    public Client(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
