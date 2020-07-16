@@ -24,7 +24,6 @@ public class ClientController {
         this.clientService = client;
     }
 
-
     @GetMapping
     public List<ClientDto> getAll() {
         return clientService.getAll();
@@ -40,24 +39,24 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> read(@PathVariable Integer id) {
+    public ResponseEntity<Client> read(@PathVariable Long id) {
         Optional<Client> client = clientService.findBy(id);
         return client.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<ClientDto> update(@PathVariable Integer id, @RequestBody @Valid Client newClient) {
+    public ResponseEntity<ClientDto> update(@PathVariable Long id, @RequestBody @Valid Client newClient) {
         Optional<Client> optionalClient = clientService.findBy(id);
         if (optionalClient.isPresent())
-          clientService.update(newClient,id);
+            clientService.update(newClient, id);
 
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         clientService.delete(id);
         return ResponseEntity.notFound().build();
     }

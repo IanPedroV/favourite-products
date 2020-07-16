@@ -1,10 +1,9 @@
 package br.com.luizalabs.favourite.favouriteproducts.model;
 
 
-import org.springframework.data.repository.cdi.Eager;
-
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Client {
@@ -46,6 +45,9 @@ public class Client {
     public Client(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+    public Client() {
+
     }
 
     public static long getSerialVersionUID() {

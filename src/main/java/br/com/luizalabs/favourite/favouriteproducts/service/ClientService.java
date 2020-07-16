@@ -26,7 +26,7 @@ public class ClientService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Client> findBy(Integer id) {
+    public Optional<Client> findBy(Long id) {
         return this.clientRepository.findById(id);
     }
 
@@ -36,7 +36,7 @@ public class ClientService {
     }
 
     @Transactional
-    public Client update(Client newClient, Integer id) {
+    public Client update(Client newClient, Long id) {
         Client client = this.clientRepository.getOne(id);
         client.setEmail(newClient.getEmail());
         client.setName(newClient.getName());
@@ -44,7 +44,7 @@ public class ClientService {
     }
 
     @Transactional
-    public void delete(Integer id) {
+    public void delete(Long id) {
         Client client = this.clientRepository.getOne(id);
         this.clientRepository.delete(client);
     }

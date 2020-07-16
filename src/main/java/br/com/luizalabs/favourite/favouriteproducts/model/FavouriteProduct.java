@@ -10,12 +10,12 @@ public class FavouriteProduct {
     @Id
     @GeneratedValue
     private UUID id;
-    private int clientId;
+    private Long clientId;
 
     public FavouriteProduct() {
     }
 
-    public FavouriteProduct(UUID id, int clientId) {
+    public FavouriteProduct(UUID id, Long clientId) {
         this.id = id;
         this.clientId = clientId;
     }
@@ -28,11 +28,12 @@ public class FavouriteProduct {
         this.id = id;
     }
 
-    public int getClientId() {
+    public Long getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 }
+
