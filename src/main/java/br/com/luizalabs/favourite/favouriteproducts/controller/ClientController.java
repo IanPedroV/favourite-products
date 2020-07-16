@@ -1,6 +1,7 @@
 package br.com.luizalabs.favourite.favouriteproducts.controller;
 
 import br.com.luizalabs.favourite.favouriteproducts.controller.dto.ClientDto;
+import br.com.luizalabs.favourite.favouriteproducts.controller.form.ClientForm;
 import br.com.luizalabs.favourite.favouriteproducts.model.Client;
 import br.com.luizalabs.favourite.favouriteproducts.service.ClientService;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,8 @@ public class ClientController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<ClientDto> create(@RequestBody @Valid Client client, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<ClientDto> create(@RequestBody @Valid ClientForm clientForm, UriComponentsBuilder uriBuilder) {
+        Client client = clientForm.convert();
         clientService.create(client);
         URI uri = uriBuilder.path("/client/{id}").buildAndExpand(client.getId()).toUri();
         return ResponseEntity.created(uri).body(new ClientDto(client));
