@@ -24,6 +24,7 @@ public class ClientDto {
         this.id = client.getId();
         this.name = client.getName();
         this.email = client.getEmail();
+        this.favouriteFavouriteProducts = client.getFavouriteProducts();
     }
 
     public Long getId() {
