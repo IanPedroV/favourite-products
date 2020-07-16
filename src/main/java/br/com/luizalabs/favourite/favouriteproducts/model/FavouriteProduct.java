@@ -1,29 +1,38 @@
 package br.com.luizalabs.favourite.favouriteproducts.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.UUID;
 
 @Entity
 public class FavouriteProduct {
-    @Id
-    private UUID id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private UUID externalId;
     private Long clientId;
 
     public FavouriteProduct() {
     }
 
-    public FavouriteProduct(UUID id, Long clientId) {
+    public FavouriteProduct(Long id, UUID externalId) {
         this.id = id;
-        this.clientId = clientId;
+        this.externalId = externalId;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public UUID getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(UUID externalId) {
+        this.externalId = externalId;
     }
 
     public Long getClientId() {

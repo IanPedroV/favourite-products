@@ -1,13 +1,16 @@
 package br.com.luizalabs.favourite.favouriteproducts.service;
 
 import br.com.luizalabs.favourite.favouriteproducts.controller.dto.ClientDto;
+import br.com.luizalabs.favourite.favouriteproducts.controller.form.ClientUpdateFavouriteProductsForm;
 import br.com.luizalabs.favourite.favouriteproducts.model.Client;
 import br.com.luizalabs.favourite.favouriteproducts.model.FavouriteProduct;
 import br.com.luizalabs.favourite.favouriteproducts.repository.ClientRepository;
 import br.com.luizalabs.favourite.favouriteproducts.repository.FavouriteProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,7 +33,7 @@ public class ClientService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Client> findBy(Long id) {
+    public Optional<Client> findById(Long id) {
         return this.clientRepository.findById(id);
     }
 
@@ -50,10 +53,15 @@ public class ClientService {
     @Transactional
     public FavouriteProduct addFavouriteProduct(UUID productId, Long clientId) {
         FavouriteProduct favouriteProduct = new FavouriteProduct();
-        favouriteProduct.setId(productId);
+        favouriteProduct.setExternalId(productId);
         favouriteProduct.setClientId(clientId);
         favouriteProductRepository.save(favouriteProduct);
         return favouriteProduct;
+    }
+
+    public boolean alreadyHasProduct(ClientUpdateFavouriteProductsForm favouriteProductsForm, Client client) {
+        return client.getFavouriteProducts().stream().noneMatch(favouriteProduct ->
+                favouriteProduct.getExternalId().equals(favouriteProductsForm.getFavouriteProductId()));
     }
 
     @Transactional

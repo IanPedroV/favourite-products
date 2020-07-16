@@ -4,7 +4,6 @@ import br.com.luizalabs.favourite.favouriteproducts.controller.dto.ClientDto;
 import br.com.luizalabs.favourite.favouriteproducts.controller.form.ClientForm;
 import br.com.luizalabs.favourite.favouriteproducts.controller.form.ClientUpdateFavouriteProductsForm;
 import br.com.luizalabs.favourite.favouriteproducts.model.Client;
-import br.com.luizalabs.favourite.favouriteproducts.model.FavouriteProduct;
 import br.com.luizalabs.favourite.favouriteproducts.service.ClientService;
 import br.com.luizalabs.favourite.favouriteproducts.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/client")
@@ -46,14 +44,14 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Client> read(@PathVariable Long id) {
-        Optional<Client> client = clientService.findBy(id);
+        Optional<Client> client = clientService.findById(id);
         return client.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<ClientDto> update(@PathVariable Long id, @RequestBody @Valid ClientForm newClient) {
-        Optional<Client> optionalClient = clientService.findBy(id);
+        Optional<Client> optionalClient = clientService.findById(id);
         if (optionalClient.isPresent()) {
             Client client = newClient.convert();
             clientService.update(client, id);
@@ -64,12 +62,24 @@ public class ClientController {
 
     @PatchMapping("/{id}/favouriteproduct")
     public ResponseEntity<ClientDto> addFavouriteProduct(@PathVariable Long id, @RequestBody @Valid ClientUpdateFavouriteProductsForm favouriteProductsForm) {
-        clientService.addFavouriteProduct(favouriteProductsForm.getFavouriteProductId(), id);
-        Optional<Client> client = clientService.findBy(id);
-        if (client.isPresent()) {
-            Client client1 = client.get();
-            return ResponseEntity.ok(new ClientDto(client1));
+        if (productService.getProduct(favouriteProductsForm.getFavouriteProductId()) == null) {
+            return ResponseEntity.unprocessableEntity().build();
         }
+        Optional<Client> optionalClient = clientService.findById(id);
+        if (optionalClient.isPresent()) {
+            Client client = optionalClient.get();
+            if (clientService.alreadyHasProduct(favouriteProductsForm, client)) {
+                clientService.addFavouriteProduct(favouriteProductsForm.getFavouriteProductId(), id);
+                return ResponseEntity.noContent().build();
+            } else return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
+    @DeleteMapping("/{id}/favouriteproduct")
+    public ResponseEntity<ClientDto> removeFavouriteProduct(@PathVariable Long id, @RequestBody @Valid ClientUpdateFavouriteProductsForm favouriteProductsForm) {
+        //TODO: fill method
         return ResponseEntity.notFound().build();
     }
 
