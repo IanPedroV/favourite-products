@@ -2,8 +2,7 @@ package br.com.luizalabs.favourite.favouriteproducts.model;
 
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Client {
@@ -18,7 +17,7 @@ public class Client {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "clientId")
-    List<FavouriteProduct> favouriteProducts = new ArrayList<>();
+    Set<FavouriteProduct> favouriteProducts = new LinkedHashSet<>();
 
     @Override
     public int hashCode() {
@@ -77,4 +76,12 @@ public class Client {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Set<FavouriteProduct> getFavouriteProducts() {
+        return Collections.unmodifiableSet(favouriteProducts);
+    }
+
+   public void addFavourite(FavouriteProduct favouriteProduct) {
+        this.favouriteProducts.add(favouriteProduct);
+   }
 }
