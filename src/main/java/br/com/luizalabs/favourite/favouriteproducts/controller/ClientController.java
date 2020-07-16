@@ -6,10 +6,13 @@ import br.com.luizalabs.favourite.favouriteproducts.controller.dto.ClientDto;
 import br.com.luizalabs.favourite.favouriteproducts.controller.form.ClientForm;
 import br.com.luizalabs.favourite.favouriteproducts.controller.form.ClientUpdateFavouriteProductsForm;
 import br.com.luizalabs.favourite.favouriteproducts.controller.form.LoginForm;
+import br.com.luizalabs.favourite.favouriteproducts.controller.form.RequestPasswordForm;
 import br.com.luizalabs.favourite.favouriteproducts.model.Client;
 import br.com.luizalabs.favourite.favouriteproducts.model.JwtResponse;
 import br.com.luizalabs.favourite.favouriteproducts.service.ClientService;
+import br.com.luizalabs.favourite.favouriteproducts.service.EmailSenderService;
 import br.com.luizalabs.favourite.favouriteproducts.service.ProductService;
+import br.com.luizalabs.favourite.favouriteproducts.service.PasswordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,14 +36,19 @@ public class ClientController {
     private final AuthenticationManager authenticationManager;
     private final ClientDetailsService clientDetailsService;
     private final JwtUtil jwtTokenUtil;
+    private final EmailSenderService emailSenderService;
+    private final PasswordService passwordService;
 
     public ClientController(ClientService client, ProductService productService, AuthenticationManager authenticationManager,
-                            ClientDetailsService clientDetailsService, JwtUtil jwtTokenUtil) {
+                            ClientDetailsService clientDetailsService, JwtUtil jwtTokenUtil, EmailSenderService emailSenderService,
+                            PasswordService passwordService) {
         this.clientService = client;
         this.productService = productService;
         this.authenticationManager = authenticationManager;
         this.clientDetailsService = clientDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.emailSenderService = emailSenderService;
+        this.passwordService = passwordService;
     }
 
 
@@ -75,21 +83,29 @@ public class ClientController {
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping("/requestpassword")
+    @Transactional
+    public ResponseEntity<?> requestPassword(@RequestBody RequestPasswordForm loginForm) {
+        Integer temporaryPassword = passwordService.generatePassword();
+        passwordService.add(loginForm.getEmail(), temporaryPassword);
+        emailSenderService.sendMail(loginForm.getEmail(), temporaryPassword);
+        return ResponseEntity.ok("OK");
+    }
+
     @PostMapping("/login")
     @Transactional
     public ResponseEntity<?> createAuthentication(@RequestBody LoginForm loginForm) {
-        try{
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
-
-        } catch (BadCredentialsException badCredentialsException){
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword()));
+        } catch (BadCredentialsException badCredentialsException) {
             throw badCredentialsException;
         }
 
         final UserDetails userDetails = clientDetailsService
-                .loadUserByUsername(loginForm.getUsername());
+                .loadUserByUsername(loginForm.getEmail());
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
-
+        passwordService.remove(loginForm.getEmail());
         return ResponseEntity.ok(new JwtResponse(jwt));
     }
 
