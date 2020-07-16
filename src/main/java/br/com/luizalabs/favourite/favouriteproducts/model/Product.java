@@ -56,4 +56,16 @@ public class Product implements Serializable {
     public float getReviewScore() {
         return reviewScore;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "price=" + price +
+                ", image='" + image + '\'' +
+                ", brand='" + brand + '\'' +
+                ", id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", reviewScore=" + reviewScore +
+                '}';
+    }
 }

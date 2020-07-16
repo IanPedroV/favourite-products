@@ -1,14 +1,12 @@
 package br.com.luizalabs.favourite.favouriteproducts.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.UUID;
 
 @Entity
 public class FavouriteProduct {
     @Id
-    @GeneratedValue
     private UUID id;
     private Long clientId;
 

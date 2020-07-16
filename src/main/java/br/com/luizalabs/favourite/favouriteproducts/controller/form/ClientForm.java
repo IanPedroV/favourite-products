@@ -1,7 +1,6 @@
 package br.com.luizalabs.favourite.favouriteproducts.controller.form;
 
 import br.com.luizalabs.favourite.favouriteproducts.model.Client;
-import br.com.luizalabs.favourite.favouriteproducts.repository.ClientRepository;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -24,7 +23,7 @@ public class ClientForm {
     }
 
     public Client convert() {
-        return new Client(name, email);
+        return new Client(this.name, this.email);
     }
 
 
