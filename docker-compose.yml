@@ -1,0 +1,21 @@
+version: "3"
+services:
+  favourite-products:
+    image: favourite-products
+    ports:
+      - "8080:8080"
+    networks:
+      - favourite-products
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: mysql:8
+    networks:
+      - favourite-products
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=1Aefqsae
+
+networks:
+  favourite-products:
