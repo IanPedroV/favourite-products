@@ -29,8 +29,6 @@ public class Product implements Serializable {
         this.id = id;
         this.title = title;
         this.reviewScore = reviewScore;
-
-
     }
 
     public float getPrice() {

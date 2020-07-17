@@ -22,6 +22,10 @@ public class ClientForm {
         this.email = email;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public Client convert() {
         return new Client(this.name, this.email);
     }

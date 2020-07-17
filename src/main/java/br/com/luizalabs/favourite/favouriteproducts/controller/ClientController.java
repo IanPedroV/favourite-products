@@ -1,23 +1,13 @@
 package br.com.luizalabs.favourite.favouriteproducts.controller;
 
-import br.com.luizalabs.favourite.favouriteproducts.config.security.ClientDetailsService;
-import br.com.luizalabs.favourite.favouriteproducts.config.security.JwtUtil;
 import br.com.luizalabs.favourite.favouriteproducts.controller.dto.ClientDto;
 import br.com.luizalabs.favourite.favouriteproducts.controller.form.ClientForm;
 import br.com.luizalabs.favourite.favouriteproducts.controller.form.ClientUpdateFavouriteProductsForm;
-import br.com.luizalabs.favourite.favouriteproducts.controller.form.LoginForm;
-import br.com.luizalabs.favourite.favouriteproducts.controller.form.RequestPasswordForm;
 import br.com.luizalabs.favourite.favouriteproducts.model.Client;
-import br.com.luizalabs.favourite.favouriteproducts.model.JwtResponse;
 import br.com.luizalabs.favourite.favouriteproducts.service.ClientService;
-import br.com.luizalabs.favourite.favouriteproducts.service.EmailSenderService;
+import br.com.luizalabs.favourite.favouriteproducts.service.FavouriteProductService;
 import br.com.luizalabs.favourite.favouriteproducts.service.ProductService;
-import br.com.luizalabs.favourite.favouriteproducts.service.PasswordService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -33,10 +23,13 @@ public class ClientController {
 
     private final ClientService clientService;
     private final ProductService productService;
+    private final FavouriteProductService favouriteProductService;
 
-    public ClientController(ClientService client, ProductService productService) {
+    public ClientController(ClientService client, ProductService productService,
+                            FavouriteProductService favouriteProductService) {
         this.clientService = client;
         this.productService = productService;
+        this.favouriteProductService = favouriteProductService;
     }
 
     @GetMapping
@@ -47,9 +40,12 @@ public class ClientController {
     @PostMapping
     @Transactional
     public ResponseEntity<ClientDto> create(@RequestBody @Valid ClientForm clientForm, UriComponentsBuilder uriBuilder) {
+        Client clientByEmail = clientService.findByEmail(clientForm.getEmail());
+        if (clientByEmail != null)
+            return ResponseEntity.badRequest().build();
         Client client = clientService.create(clientForm.convert());
         URI uri = uriBuilder.path("/client/{id}").buildAndExpand(client.getId()).toUri();
-        return ResponseEntity.created(uri).body(new ClientDto(client));
+        return ResponseEntity.created(uri).body(new ClientDto(client, clientService.getProducts(client.getFavouriteProducts())));
     }
 
     @GetMapping("/{id}")
@@ -65,7 +61,7 @@ public class ClientController {
         if (optionalClient.isPresent()) {
             Client client = newClient.convert();
             clientService.update(client, id);
-            return ResponseEntity.ok(new ClientDto(client));
+            return ResponseEntity.ok(new ClientDto(client, clientService.getProducts(client.getFavouriteProducts())));
         }
         return ResponseEntity.notFound().build();
     }
@@ -78,7 +74,7 @@ public class ClientController {
         Optional<Client> optionalClient = clientService.findById(id);
         if (optionalClient.isPresent()) {
             Client client = optionalClient.get();
-            if (clientService.alreadyHasProduct(favouriteProductsForm, client)) {
+            if (!clientService.alreadyHaveProduct(favouriteProductsForm, client)) {
                 clientService.addFavouriteProduct(favouriteProductsForm.getFavouriteProductId(), id);
                 return ResponseEntity.noContent().build();
             } else return ResponseEntity.badRequest().build();
@@ -89,14 +85,23 @@ public class ClientController {
 
     @DeleteMapping("/{id}/favouriteproduct")
     public ResponseEntity<ClientDto> removeFavouriteProduct(@PathVariable Long id, @RequestBody @Valid ClientUpdateFavouriteProductsForm favouriteProductsForm) {
-        //TODO: fill method
+        Optional<Client> optionalClient = clientService.findById(id);
+        if (optionalClient.isPresent() &&
+                clientService.alreadyHaveProduct(favouriteProductsForm, optionalClient.get())) {
+            favouriteProductService.deleteByExternalId(favouriteProductsForm.getFavouriteProductId());
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        clientService.delete(id);
+        Optional<Client> optional = clientService.findById(id);
+        if (optional.isPresent()) {
+            clientService.delete(id);
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.notFound().build();
     }
 

@@ -84,4 +84,8 @@ public class Client {
    public void addFavourite(FavouriteProduct favouriteProduct) {
         this.favouriteProducts.add(favouriteProduct);
    }
+
+   public void removeFavourite(FavouriteProduct favouriteProduct) {
+        this.favouriteProducts.remove(favouriteProduct);
+   }
 }
