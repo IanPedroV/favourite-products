@@ -20,7 +20,7 @@ public class EmailSenderService {
             MimeMessage mail = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mail);
             helper.setTo(recipient);
-            helper.setSubject("Senha de acesso temporária");
+            helper.setSubject("Favourite Products temporary password");
             helper.setText("<p>Your password is: " + temporaryPassword + " </p>", true);
             javaMailSender.send(mail);
         } catch (Exception e) {

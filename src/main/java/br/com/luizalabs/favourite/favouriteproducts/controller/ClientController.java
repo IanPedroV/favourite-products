@@ -33,24 +33,11 @@ public class ClientController {
 
     private final ClientService clientService;
     private final ProductService productService;
-    private final AuthenticationManager authenticationManager;
-    private final ClientDetailsService clientDetailsService;
-    private final JwtUtil jwtTokenUtil;
-    private final EmailSenderService emailSenderService;
-    private final PasswordService passwordService;
 
-    public ClientController(ClientService client, ProductService productService, AuthenticationManager authenticationManager,
-                            ClientDetailsService clientDetailsService, JwtUtil jwtTokenUtil, EmailSenderService emailSenderService,
-                            PasswordService passwordService) {
+    public ClientController(ClientService client, ProductService productService) {
         this.clientService = client;
         this.productService = productService;
-        this.authenticationManager = authenticationManager;
-        this.clientDetailsService = clientDetailsService;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.emailSenderService = emailSenderService;
-        this.passwordService = passwordService;
     }
-
 
     @GetMapping
     public List<ClientDto> getAll() {
@@ -81,32 +68,6 @@ public class ClientController {
             return ResponseEntity.ok(new ClientDto(client));
         }
         return ResponseEntity.notFound().build();
-    }
-
-    @PostMapping("/requestpassword")
-    @Transactional
-    public ResponseEntity<?> requestPassword(@RequestBody RequestPasswordForm loginForm) {
-        Integer temporaryPassword = passwordService.generatePassword();
-        passwordService.add(loginForm.getEmail(), temporaryPassword);
-        emailSenderService.sendMail(loginForm.getEmail(), temporaryPassword);
-        return ResponseEntity.ok("OK");
-    }
-
-    @PostMapping("/login")
-    @Transactional
-    public ResponseEntity<?> createAuthentication(@RequestBody LoginForm loginForm) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword()));
-        } catch (BadCredentialsException badCredentialsException) {
-            throw badCredentialsException;
-        }
-
-        final UserDetails userDetails = clientDetailsService
-                .loadUserByUsername(loginForm.getEmail());
-
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
-        passwordService.remove(loginForm.getEmail());
-        return ResponseEntity.ok(new JwtResponse(jwt));
     }
 
     @PatchMapping("/{id}/favouriteproduct")

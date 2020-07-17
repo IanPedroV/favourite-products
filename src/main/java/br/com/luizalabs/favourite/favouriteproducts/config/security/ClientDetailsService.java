@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 @Service
 public class ClientDetailsService implements UserDetailsService {
-
-
     private final PasswordService passwordService;
 
     public ClientDetailsService(PasswordService passwordService) {
