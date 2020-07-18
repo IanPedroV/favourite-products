@@ -1,5 +1,6 @@
 package br.com.luizalabs.favourite.favouriteproducts.service;
 
+import br.com.luizalabs.favourite.favouriteproducts.model.Client;
 import br.com.luizalabs.favourite.favouriteproducts.model.FavouriteProduct;
 import br.com.luizalabs.favourite.favouriteproducts.repository.ClientRepository;
 import br.com.luizalabs.favourite.favouriteproducts.repository.FavouriteProductRepository;
@@ -22,8 +23,10 @@ public class FavouriteProductService {
     @Transactional
     public void deleteByExternalId(UUID externalId) {
         FavouriteProduct favouriteProduct = this.favouriteProductRepository.findByUuid(externalId);
-        if (clientRepository.findById(favouriteProduct.getClientId()).isPresent())
-            clientRepository.findById(favouriteProduct.getClientId()).get().removeFavourite(favouriteProduct);
+        if (clientRepository.findById(favouriteProduct.getClientId()).isPresent()) {
+            Client client = clientRepository.findById(favouriteProduct.getClientId()).get();
+            client.removeFavourite(favouriteProduct);
+        }
 
     }
 }
