@@ -4,10 +4,13 @@ import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FavouriteProductsApplicationTests {
+public class FavouriteProductsApplicationTests {
+
+	public FavouriteProductsApplicationTests() {
+	}
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
 	}
 
 }
