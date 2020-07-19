@@ -3,6 +3,7 @@ package br.com.luizalabs.favourite.favouriteproducts.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,6 +35,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers("/login").permitAll().and()
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/client").permitAll().and()
                 .authorizeRequests().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
                 "/configuration/**", "/swagger-ui.html", "/webjars/**").permitAll().and()
                 .authorizeRequests().antMatchers("/login/requestpassword").permitAll()
