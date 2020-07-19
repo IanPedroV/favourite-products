@@ -7,6 +7,7 @@ import br.com.luizalabs.favourite.favouriteproducts.controller.form.RequestPassw
 import br.com.luizalabs.favourite.favouriteproducts.model.JwtResponse;
 import br.com.luizalabs.favourite.favouriteproducts.service.EmailSenderService;
 import br.com.luizalabs.favourite.favouriteproducts.service.PasswordService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,6 +37,7 @@ public class LoginController {
     }
 
     @PostMapping("/requestpassword")
+    @ApiOperation(value = "Requests a password by e-mail")
     public ResponseEntity<?> requestPassword(@RequestBody RequestPasswordForm loginForm) {
         Integer temporaryPassword = passwordService.generatePassword();
         passwordService.add(loginForm.getEmail(), temporaryPassword);
@@ -44,7 +46,8 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAuthentication(@RequestBody LoginForm loginForm) {
+    @ApiOperation(value = "Log in the client and return a JWT key")
+    public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword()));
         } catch (BadCredentialsException badCredentialsException) {

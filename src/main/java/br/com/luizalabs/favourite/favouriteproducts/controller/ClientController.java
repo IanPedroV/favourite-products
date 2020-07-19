@@ -7,6 +7,7 @@ import br.com.luizalabs.favourite.favouriteproducts.model.Client;
 import br.com.luizalabs.favourite.favouriteproducts.service.ClientService;
 import br.com.luizalabs.favourite.favouriteproducts.service.FavouriteProductService;
 import br.com.luizalabs.favourite.favouriteproducts.service.ProductService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,6 +40,7 @@ public class ClientController {
 
     @PostMapping
     @Transactional
+    @ApiOperation(value = "Creates a client")
     public ResponseEntity<ClientDto> create(@RequestBody @Valid ClientForm clientForm, UriComponentsBuilder uriBuilder) {
         Client clientByEmail = clientService.findByEmail(clientForm.getEmail());
         if (clientByEmail != null)
@@ -49,6 +51,7 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "Returns a client by its id")
     public ResponseEntity<Client> read(@PathVariable Long id) {
         Optional<Client> client = clientService.findById(id);
         return client.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
@@ -56,6 +59,7 @@ public class ClientController {
 
     @PutMapping("/{id}")
     @Transactional
+    @ApiOperation(value = "Updates a client")
     public ResponseEntity<ClientDto> update(@PathVariable Long id, @RequestBody @Valid ClientForm newClient) {
         Optional<Client> optionalClient = clientService.findById(id);
         if (optionalClient.isPresent()) {
@@ -67,6 +71,7 @@ public class ClientController {
     }
 
     @PatchMapping("/{id}/favouriteproduct")
+    @ApiOperation(value = "Adds a favourite product to a client")
     public ResponseEntity<ClientDto> addFavouriteProduct(@PathVariable Long id, @RequestBody @Valid ClientUpdateFavouriteProductsForm favouriteProductsForm) {
         if (productService.getProduct(favouriteProductsForm.getFavouriteProductId()) == null) {
             return ResponseEntity.unprocessableEntity().build();
@@ -84,6 +89,7 @@ public class ClientController {
 
 
     @DeleteMapping("/{id}/favouriteproduct")
+    @ApiOperation(value = "Removes a favourite product to a client")
     public ResponseEntity<ClientDto> removeFavouriteProduct(@PathVariable Long id, @RequestBody @Valid ClientUpdateFavouriteProductsForm favouriteProductsForm) {
         Optional<Client> optionalClient = clientService.findById(id);
         if (optionalClient.isPresent() &&
@@ -96,6 +102,7 @@ public class ClientController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @ApiOperation(value = "Deletes a client")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<Client> optional = clientService.findById(id);
         if (optional.isPresent()) {
