@@ -1,7 +1,7 @@
 package br.com.luizalabs.favourite.favouriteproducts.controller;
 
 import br.com.luizalabs.favourite.favouriteproducts.config.security.ClientDetailsService;
-import br.com.luizalabs.favourite.favouriteproducts.config.security.JwtUtil;
+import br.com.luizalabs.favourite.favouriteproducts.service.JwtService;
 import br.com.luizalabs.favourite.favouriteproducts.controller.form.LoginForm;
 import br.com.luizalabs.favourite.favouriteproducts.controller.form.RequestPasswordForm;
 import br.com.luizalabs.favourite.favouriteproducts.model.JwtResponse;
@@ -17,19 +17,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.transaction.Transactional;
-
 @RestController
 @RequestMapping("/login")
 public class LoginController {
     private final AuthenticationManager authenticationManager;
     private final ClientDetailsService clientDetailsService;
-    private final JwtUtil jwtTokenUtil;
+    private final JwtService jwtTokenUtil;
     private final EmailSenderService emailSenderService;
     private final PasswordService passwordService;
 
     public LoginController(AuthenticationManager authenticationManager, ClientDetailsService clientDetailsService,
-                           JwtUtil jwtTokenUtil, EmailSenderService emailSenderService, PasswordService passwordService) {
+                           JwtService jwtTokenUtil, EmailSenderService emailSenderService, PasswordService passwordService) {
         this.authenticationManager = authenticationManager;
         this.clientDetailsService = clientDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
@@ -50,7 +48,7 @@ public class LoginController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword()));
         } catch (BadCredentialsException badCredentialsException) {
-            throw badCredentialsException;
+            return ResponseEntity.status(500).build();
         }
         final UserDetails userDetails = clientDetailsService.loadUserByUsername(loginForm.getEmail());
         final String jwt = jwtTokenUtil.generateToken(userDetails);
