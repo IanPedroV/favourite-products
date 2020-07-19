@@ -1,6 +1,6 @@
 package br.com.luizalabs.favourite.favouriteproducts.config.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.luizalabs.favourite.favouriteproducts.service.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,13 +19,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final ClientDetailsService userDetailsService;
 
-    private final JwtUtil jwtUtil;
+    private final JwtService jwtService;
 
-    public JwtRequestFilter(ClientDetailsService userDetailsService, JwtUtil jwtUtil) {
-        this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
+    public JwtRequestFilter(ClientDetailsService clientDetailsService, JwtService jwtService) {
+        this.userDetailsService = clientDetailsService;
+        this.jwtService = jwtService;
     }
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -37,13 +36,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
+            username = jwtService.extractUsername(jwt);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            if (jwtUtil.validateToken(jwt, userDetails)) {
+            if (jwtService.validateToken(jwt, userDetails)) {
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
@@ -52,8 +51,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
-
         filterChain.doFilter(request, response);
-
     }
 }
