@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ProductService {
 
     private final RestTemplate restTemplate;
-    private Map<UUID, Product> cachedProducts = new HashMap<>();
+    private final Map<UUID, Product> cachedProducts = new HashMap<>();
 
     public ProductService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();

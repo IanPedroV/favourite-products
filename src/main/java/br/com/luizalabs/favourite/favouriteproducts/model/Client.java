@@ -1,6 +1,8 @@
 package br.com.luizalabs.favourite.favouriteproducts.model;
 
 
+import br.com.luizalabs.favourite.favouriteproducts.controller.dto.ClientDto;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -47,6 +49,11 @@ public class Client {
     }
     public Client() {
 
+    }
+
+    public Client(ClientDto clientDto) {
+        this.name = clientDto.getName();
+        this.email = clientDto.getEmail();
     }
 
     public static long getSerialVersionUID() {

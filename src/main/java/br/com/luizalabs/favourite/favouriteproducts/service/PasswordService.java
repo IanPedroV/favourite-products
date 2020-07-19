@@ -1,12 +1,12 @@
 package br.com.luizalabs.favourite.favouriteproducts.service;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@Service
 public class PasswordService {
     private Map<String, Integer> temporaryPassword = new HashMap<>();
 

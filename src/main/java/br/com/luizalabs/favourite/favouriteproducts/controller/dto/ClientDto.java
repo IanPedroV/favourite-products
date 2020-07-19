@@ -21,6 +21,13 @@ public class ClientDto {
         this.favouriteProducts = products;
     }
 
+    public ClientDto(Client client) {
+        this.id = client.getId();
+        this.name = client.getName();
+        this.email = client.getEmail();
+        this.favouriteProducts = Collections.emptySet();
+    }
+
     public Long getId() {
         return id;
     }

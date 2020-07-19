@@ -5,10 +5,13 @@ import java.util.UUID;
 
 public class ClientUpdateFavouriteProductsForm {
     @NotNull
-    private final UUID favouriteProductId;
+    private UUID favouriteProductId;
 
-    public ClientUpdateFavouriteProductsForm( UUID favouriteProductId, Long clientId) {
+    public ClientUpdateFavouriteProductsForm(UUID favouriteProductId, Long clientId) {
         this.favouriteProductId = favouriteProductId;
+    }
+
+    public ClientUpdateFavouriteProductsForm() {
     }
 
     public UUID getFavouriteProductId() {
