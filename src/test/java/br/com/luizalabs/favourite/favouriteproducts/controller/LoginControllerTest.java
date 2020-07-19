@@ -48,7 +48,7 @@ public class LoginControllerTest {
 
    @Test
     void shouldCreateAuthentication() {
-        ResponseEntity<?> response = loginController.createAuthentication(new LoginForm("user1@gmail.com", "pwd1"));
+        ResponseEntity<?> response = loginController.login(new LoginForm("user1@gmail.com", "pwd1"));
         Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
     }
 

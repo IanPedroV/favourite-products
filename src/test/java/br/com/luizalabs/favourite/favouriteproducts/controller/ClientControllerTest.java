@@ -39,8 +39,6 @@ public class ClientControllerTest {
     private FavouriteProductService favouriteProductService;
     @Mock
     UriComponentsBuilder uriBuilder;
-    @Mock
-    HttpServletRequest httpServletRequest;
     private List<ClientDto> clientList;
 
     @BeforeEach
@@ -69,7 +67,7 @@ public class ClientControllerTest {
     void shouldAddFavouriteProduct() {
         Mockito.when(clientService.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(new Client(clientList.get(0))));
         Mockito.when(productService.getProduct(ArgumentMatchers.any())).thenReturn(new Product());
-        ResponseEntity<ClientDto> response = clientController.addFavouriteProduct(httpServletRequest, 1L, new ClientUpdateFavouriteProductsForm());
+        ResponseEntity<ClientDto> response = clientController.addFavouriteProduct( 1L, new ClientUpdateFavouriteProductsForm());
         Assertions.assertThat(response.getStatusCode().value()).isEqualTo(204);
     }
 
