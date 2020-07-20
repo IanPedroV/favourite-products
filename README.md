@@ -46,7 +46,7 @@ This application contains unit tests covering it's controllers. Be my guess to r
 
 ## Running
 
-As explained before, this is a REST API, as there is no visual interface you need to make HTTP requests in order to see the API functionality. All the endpoints, neededparameters and related stuff are described in the Swagger documentation: [HERE](http://localhost:8080/swagger-ui.html#). The app needs to be up in order to see swagger docs. In seeing the swagger information perform the following actions:
+As explained before, this is a REST API, as there is no visual interface you need to make HTTP requests in order to see the API functionality. All the endpoints, needed parameters and related stuff are described in the Swagger documentation: [HERE](http://localhost:8080/swagger-ui.html#). The app needs to be up in order to see swagger docs. In seeing the swagger information perform the following actions:
 
 So you can get the login later:
 

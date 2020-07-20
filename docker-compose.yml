@@ -1,21 +1,24 @@
-version: "3"
+# spring-boot-docker/docker-compose.yml
+version: "3.7"
 services:
-  favourite-products:
-    image: favourite-products
-    ports:
-      - "8080:8080"
+  mysql-service:
+    image: mysql:5.7
     networks:
-      - favourite-products
-    depends_on:
-      - mysqldb
-
-  mysqldb:
-    image: mysql:8
-    networks:
-      - favourite-products
+      - spring-boot-mysql-network
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=1Aefqsae
-
+      - MYSQL_ROOT_PASSWORD=1Aefqsae
+      - MYSQL_DATABASE=favourite-products
+  web-service:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - spring-boot-mysql-network
+    depends_on:
+      - mysql-service
 networks:
-  favourite-products:
+  spring-boot-mysql-network:
+    driver: bridge
