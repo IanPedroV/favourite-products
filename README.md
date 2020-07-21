@@ -34,6 +34,8 @@ Having docker, just run:
 
 You might need to grab a cup of coffee while your application is coming up. This application runs on port 8080, keep that in mind.
 
+If you run in docker, there's no need to change the application.properties. But if you're running locally, change the
+spring.datasource.url to use localhost! (You need to have mysql installed).
 
 ## Testing
 
