@@ -1,8 +1,6 @@
 # Favourite Products
 
 This application is the LuizaLabs challenge for a back-end dev position.
-A full description of the requirements for this aplication can be found [HERE](REQUIREMENTS-ELICITATION.md)
-.
 
 Summarizing, this is a Java Spring Boot REST API for client and its favourites products management. It provides information about the said entities in JSON format as long as the entity is authenticated.
 
@@ -27,18 +25,16 @@ First of all, clone this repository:
 
 `git clone https://github.com/IanPedroV/favourite-products`
 
-Before trying to run the container, you will need to build an image.
-Execute the following command on the terminal to create the image.
-The first execution may take some time, but after it, it will execute much
-faster using Docker cached layers.
+The docker compose will handle all the building and stuff for you. If you don't have docker, just run the project
+inside your IDE.
 
-//TODO: put steps
-
-Inside the project directory:
-
-You might need to grab a cup of coffee while your application is coming up.
+Having docker, just run:
 
 `docker-compose up`
+
+This application runs on port 8080, keep that in mind!
+
+You might need to grab a cup of coffee while your application is coming up.
 
 ## Testing
 
@@ -47,10 +43,6 @@ This application contains unit tests covering it's controllers. Be my guess to r
 ## Running
 
 As explained before, this is a REST API, as there is no visual interface you need to make HTTP requests in order to see the API functionality. All the endpoints, needed parameters and related stuff are described in the Swagger documentation: [HERE](http://localhost:8080/swagger-ui.html#). The app needs to be up in order to see swagger docs. In seeing the swagger information perform the following actions:
-
-So you can get the login later:
-
-`Register a client POST to (/client/)`
 
 Request a password, that will be send to your registered e-mail so you can login:
 
@@ -66,4 +58,4 @@ The token expires after 1 hour, then you have to login again.
 
 Example of a request to a authenticated route:
 
-`curl -X GET \ http://localhost:8080/client/ \ -H 'authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpYW4wMTk4QGdtYWlsLmNvbSIsImV4cCI6MTU5NTEzNjE0MCwiaWF0IjoxNTk1MTAwMTQwfQ.blT6DDx_W8GxykzoURed--nZFCZH1VqOkdPMnibHIgM' \ -H 'cache-control: no-cache' \ -H 'postman-token: 2c3f0aa6-0312-1ca9-79f1-bfbea7d7b943'`
+`curl -X GET \ http://localhost:8080/client/ \ -H 'authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpYW4wMTk4QGdtYWlsLmNvbSIsImV4cCI6MTU5NTEzNjE0MCwiaWF0IjoxNTk1MTAwMTQwfQ.blT6DDx_W8GxykzoURed--nZFCZH1VqOkdPMnibHIgM' \ -H 'cache-control: no-cache'`

@@ -14,7 +14,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     ports:
-      - "4000:4000"
+      - "8080:8080"
     networks:
       - spring-boot-mysql-network
     depends_on:
