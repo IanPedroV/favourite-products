@@ -15,7 +15,7 @@ Summarizing, this is a Java Spring Boot REST API for client and its favourites p
 * Each token contains data about the user (email, name, expiration time, when it was issued, and the issuer)
 * Those claims are used to give the user access to the resources under his/her control, and time claims are checked;
 * The token expires in 1 hour
-* A [MVC architecture](#project-structure) was followed, in which the model defines the entities in the given [model](./model); the [controller](./controller) exposese the routes, and the services [services](./services) provide the business rules for the manipulation and presentation/visualization of the entities.
+* A [MVC architecture](#project-structure) was followed, in which the model defines the entities in the given [model](./src/main/java/br/com/luizalabs/favourite/favouriteproducts/model); the [controller](.//src/main/java/br/com/luizalabs/favourite/favouriteproducts/controller) exposese the routes, and the services [services](.//src/main/java/br/com/luizalabs/favourite/favouriteproducts/service) provide the business rules for the manipulation and presentation/visualization of the entities.
 * This approach keeps the code more modular (with separation of concerns), extensible and decoupled, improving developers' experience.
 
 
@@ -32,9 +32,8 @@ Having docker, just run:
 
 `docker-compose up`
 
-This application runs on port 8080, keep that in mind!
+You might need to grab a cup of coffee while your application is coming up. This application runs on port 8080, keep that in mind.
 
-You might need to grab a cup of coffee while your application is coming up.
 
 ## Testing
 
